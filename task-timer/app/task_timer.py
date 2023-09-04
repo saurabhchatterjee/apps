@@ -1,16 +1,29 @@
 import os
-from flask import request, Flask
+from flask import request, Flask, url_for, redirect, render_template
+from flaskext.mysql import MySQL
 
 app = Flask(__name__)
+# mysql = MySQL()
+#
+# # MySql Config
+# app.config["MYSQL_DATABASE_USER"] = "root"
+# app.config["MYSQL_DATABASE_PASSWORD"] = os.getenv("db_root_password")
+# app.config["MYSQL_DATABASE_DB"] = os.getenv("db_name")
+# app.config["MYSQL_DATABASE_HOST"] = os.getenv("MYSQL_SERVICE_HOST")
+# app.config["MYSQL_DATABASE_PORT"] = int(os.getenv("MYSQL_SERVICE_PORT"))
+# mysql.init_app(app)
 
 
 @app.route("/")
 def index():
-    return "Hello, world!"
+    return render_template('index.html')
 
 
-@app.route("/add", methods=["POST"])
+@app.route("/add_task", methods=["GET", "POST"])
 def add_task():
+    if request.method == 'POST':
+        return redirect(url_for('index'))
+
     return "add new tasks here"
 
 
