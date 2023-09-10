@@ -1,8 +1,0 @@
-# https://kubernetes.io/docs/tasks/administer-cluster/namespaces-walkthrough/
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: task-timer
-  labels:
-    name: task-timer
