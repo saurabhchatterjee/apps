@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-app-deployment
+  namespace: todo-app
+  labels:
+    app: todo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: todo
+  template:
+    metadata:
+      labels:
+        app: todo
+    spec:
+      containers:
+        - name: todo-app-container
+          image: todo-app-image
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3003
+          env:
+            - name: db_root_password
+              valueFrom:
+                secretKeyRef:
+                  name: todo-app-secrets
+                  key: db_root_password
+            - name: db_name
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-config
+                  key: db_name
+            - name: db_user
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-config
+                  key: db_user
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: todo-app
+  name: todo-app-service
+spec:
+  ports:
+  - port: 3003
+    protocol: TCP
+    targetPort: 3003
+  selector:
+    app: todo
+  type: LoadBalancer

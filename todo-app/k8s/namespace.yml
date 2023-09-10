@@ -1,0 +1,8 @@
+# https://kubernetes.io/docs/tasks/administer-cluster/namespaces-walkthrough/
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: todo-app-namespace
+  labels:
+    name: todo-app-namespace

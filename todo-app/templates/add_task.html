@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Add Task{% endblock %}
+
+{% block html_head %}
+    <style type="text/css">
+        .important {
+            color: lightcoral;
+            align-content: center;
+        }
+
+        .forms {
+            color: darkslategray;
+            align-items: baseline;
+            width: auto;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+<form action="http://localhost:3003/tasks/add_task" method="POST" class="forms">
+    <div class="new-task-form-group">
+        <label for="taskName">Task Name</label>
+        <input type="text" class="form-control" id="taskName" name="taskName" aria-describedby="taskNameHelp"
+               placeholder="">
+        <small id="taskNameHelp" class="form-text text-muted"></small>
+    </div>
+
+    <div class="new-task-form-group">
+        <label for="taskDetails">Task Details</label>
+        <input type="text" class="form-control" id="taskDetails" name="taskDetails" aria-describedby="taskDetailsHelp"
+               placeholder="">
+        <small id="taskDetailsHelp" class="form-text text-muted"></small>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Add Task</button>
+</form>
+{% endblock %}
+
