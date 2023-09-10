@@ -1,4 +1,4 @@
-# task timer
+# todo app
 
 create namespace
 ```shell
@@ -162,26 +162,8 @@ base64 -d <<< <encoded password>
 # Step 2: Run a MySQL client to connect to the server
 kubectl run -it --rm --image=mysql --restart=Never mysql-client -- mysql --host mysql --password=<decoded password>
 # Step 3: Create the database
-CREATE DATABASE tasktimer;
-USE tasktimer;
-CREATE TABLE categories(id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255));
-CREATE TABLE tasks(id INT PRIMARY KEY AUTO_INCREMENT, 
-                  category_id INT,
-                  name VARCHAR(255),
-                  start TIMESTAMP,
-                  stop TIMESTAMP,
-                  is_deleted BOOLEAN,
-                  is_paused BOOLEAN,
-                  pause TIMESTAMP,
-                  unpause TIMESTAMP,
-                  pause_hours SMALLINT DEFAULT 0,
-                  CONSTRAINT fk_category
-                  FOREIGN KEY (category_id)
-                  REFERENCES categories(id)
-                  );
+CREATE DATABASE todoapp;
 ```
-
-Deploy API
 
 
 
