@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Logger{% endblock %}
+
+{% block content %}
+
+    <div class="page-header">
+        <h3>Log your day</h3>
+    </div>
+
+    <form action="{{ url_for('day_log', num_rows=num_initial_rows) }}" method="post" class="form-horizontal">
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        {% import 'form_macro.html' as form_macro %}
+
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr>
+                {% for col in columns %}
+                    <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in form.foods %}
+                <tr>
+                    <td>{{ today }}</td>
+                    <td>{{ form_macro.form_field(row.item, with_label=False) }}</td>
+                    <td><span class="unit"></span></td>
+                    <td>{{ form_macro.form_field(row.quantity, with_label=False, class_="quantity-field") }}</td>
+                    <td><span class="description"></span></td>
+                    <td><span class="calories"></span></td>
+                    <td><span class="fat"></span></td>
+                    <td><span class="protein"></span></td>
+                    <td><span class="carbs"></span></td>
+                    <td><span class="sugar"></span></td>
+                    <td><span class="added_sugar"></span></td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-icon btn-primary" name="log_food">Log Day</button>
+            <button type="submit" name="add_row" class="btn btn-success">Add Row</button>
+        </div>
+    </form>
+
+{% endblock %}
+{% block extrajs %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.quantity-field').on('input', function () {
+                var row = $(this).closest('tr');
+                var selected_food = row.find('[name^="foods-"][name$="-item"]').val();
+                console.log(selected_food)
+                var input_qty = $(this).val();
+                console.log(input_qty)
+
+                var csrfToken = $('input[name="csrf_token"]').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/log/query',
+                    data: {
+                        'selected_food': selected_food,
+                        'input_qty': input_qty
+                    },
+                    headers: {
+                        'X-CSRFToken': csrfToken  // Include the CSRF token in the headers
+                    },
+                    contentType: 'application/x-www-form-urlencoded',
+                    success: function (data) {
+                        // Update the fields in the same row with the response data
+                        row.find('.unit').text(data.unit);
+                        row.find('.description').text(data.description);
+                        row.find('.calories').text(data.calories);
+                        row.find('.fat').text(data.fat);
+                        row.find('.protein').text(data.protein);
+                        row.find('.carbs').text(data.carbs);
+                        row.find('.sugar').text(data.sugar);
+                        row.find('.added_sugar').text(data.added_sugar);
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

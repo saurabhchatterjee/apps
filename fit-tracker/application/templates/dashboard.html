@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+    <div class="page-header">
+        <h3>Dashboard</h3>
+    </div>
+
+    {% if has_food_data %}
+        <h4>Food consumed for {{ today }}</h4><br>
+        <table id="hidden-table" class="table table-bordered table-striped table-hover">
+        <thead>
+        <tr>
+            {% for col in columns %}
+                <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for record in food_records %}
+            <tr>
+                <td>{{ today }}</td>
+                <td>{{ record["name"] }}</td>
+                <td>{{ record["unit"] }}</td>
+                <td>{{ record["qty"] }}</td>
+                <td>{{ record["description"] }}</td>
+                <td>{{ record["calories"] }}</td>
+                <td>{{ record["fat"] }}</td>
+                <td>{{ record["protein"] }}</td>
+                <td>{{ record["carbs"] }}</td>
+                <td>{{ record["sugar"] }}</td>
+                <td>{{ record["added_sugar"] }}</td>
+            </tr>
+        {% endfor %}
+        {% if totals %}
+            <tr>
+                <td>Total</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{ totals['calories'] }}</td>
+                <td>{{ totals['fat'] }}</td>
+                <td>{{ totals['protein'] }}</td>
+                <td>{{ totals['carbs'] }}</td>
+                <td>{{ totals['sugar'] }}</td>
+                <td>{{ totals['added_sugar'] }}</td>
+            </tr>
+        {% endif %}
+
+    {% endif %}
+</tbody>
+</table>
+{% endblock %}

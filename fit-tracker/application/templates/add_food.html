@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Food{% endblock %}
+
+{% block content %}
+
+    <div class="page-header">
+        <h3>Add New Food</h3>
+    </div>
+
+    <form action="{{ url_for('add_food') }}" method="post" class="form-horizontal">
+        {{ form.hidden_tag() }}
+        {% import 'form_macro.html' as form_macro %}
+        {{ form_macro.form_field(form.name, with_label=True) }}
+        {{ form_macro.form_field(form.description, with_label=True) }}
+        {{ form_macro.form_field(form.qty, with_label=True) }}
+        {{ form_macro.form_field(form.unit, with_label=True) }}
+        {{ form_macro.form_field(form.calories, with_label=True) }}
+        {{ form_macro.form_field(form.fat, with_label=True) }}
+        {{ form_macro.form_field(form.protein, with_label=True) }}
+        {{ form_macro.form_field(form.carbs, with_label=True) }}
+        {{ form_macro.form_field(form.sugar, with_label=True) }}
+        {{ form_macro.form_field(form.added_sugar, with_label=True) }}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-icon btn-primary">Add Food</button>
+        </div>
+    </form>
+
+{% endblock %}

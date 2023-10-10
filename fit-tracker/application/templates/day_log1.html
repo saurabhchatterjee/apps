@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Logger{% endblock %}
+
+{% block content %}
+
+    <div class="page-header">
+        <h3>Log your day</h3>
+    </div>
+
+    {% if has_target_set %}
+        <h4>Targets for {{ today }}</h4><br>
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Calories</th>
+                <th>Protein</th>
+                <th>Carbs</th>
+                <th>Fat</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Total</td>
+                <td>{{ target.calorie_target }}</td>
+                <td>{{ target.protein_target }}</td>
+                <td>{{ target.carbs_target }}</td>
+                <td>{{ target.fat_target }}</td>
+            </tr>
+            <tr>
+                <td>Remaining</td>
+                <td>{{ remaining_macros['calorie'] }}</td>
+                <td>{{ remaining_macros['protein'] }}</td>
+                <td>{{ remaining_macros['carbs'] }}</td>
+                <td>{{ remaining_macros['fat'] }}</td>
+            </tr>
+            </tbody>
+        </table>
+    {% endif %}
+
+    <h4>Log your daily food, wellness, and activities for {{ today }}</h4><br>
+    <form action="{{ url_for('day_log') }}" method="post" class="form-horizontal">
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        {% import 'form_macro.html' as form_macro %}
+
+        <button type="submit" class="btn btn-icon btn-primary" name="log_food">Log Day</button>
+        <button type="submit" name="done" class="btn btn-success">Done</button>
+        <br><br>
+
+        <h5>Food intake for {{ today }}</h5><br>
+        {% for food in form.foods %}
+            {{ form_macro.form_field(food.item, with_label=True) }}
+            {{ form_macro.form_field(food.quantity, with_label=True, class_="quantity-field") }}
+        {% endfor %}
+
+        <h5>Wellness for {{ today }}</h5><br>
+        {% for wellness in form.wellness %}
+            {{ form_macro.form_field(wellness.category_name, with_label=True) }}
+            {{ form_macro.form_field(wellness.category_score, with_label=True) }}
+        {% endfor %}
+
+        <h5>Activities for {{ today }}</h5><br>
+        {% for activity in form.activities %}
+            {{ form_macro.form_field(activity.activity_name, with_label=True) }}
+            {{ form_macro.form_field(activity.activity_duration, with_label=True) }}
+        {% endfor %}
+
+    </form>
+
+{% endblock %}
+
+{% block extrajs %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.quantity-field').on('input', function () {
+                var row = $(this).closest('form');
+                var selected_food = row.find('[name^="foods-"][name$="-item"]').val();
+                console.log(selected_food)
+                var input_qty = $(this).val();
+                console.log(input_qty)
+
+                var csrfToken = $('input[name="csrf_token"]').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/log/query',
+                    data: {
+                        'selected_food': selected_food,
+                        'input_qty': input_qty
+                    },
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
+                    contentType: 'application/x-www-form-urlencoded',
+                    success: function (data) {
+                        row.find('.unit').text(data.unit);
+                        row.find('.description').text(data.description);
+                        row.find('.calories').text(data.calories);
+                        row.find('.fat').text(data.fat);
+                        row.find('.protein').text(data.protein);
+                        row.find('.carbs').text(data.carbs);
+                        row.find('.sugar').text(data.sugar);
+                        row.find('.added_sugar').text(data.added_sugar);
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

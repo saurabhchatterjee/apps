@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Set Target{% endblock %}
+
+{% block content %}
+
+    <div class="page-header">
+        <h3>Set target for {{ today }}</h3>
+    </div>
+
+    <form action="{{ url_for('set_day_target') }}" method="post" class="form-horizontal">
+        {{ form.hidden_tag() }}
+        {% import 'form_macro.html' as form_macro %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-icon btn-primary">Set target</button>
+            <button type="submit" name="copy_week" class="btn btn-success">Copy for week</button>
+        </div><br><br>
+
+        {{ form_macro.form_field(form.calorie_target, with_label=True) }}
+        <h4>Macros</h4>
+        {{ form_macro.form_field(form.fat_target, with_label=True) }}
+        {{ form_macro.form_field(form.protein_target, with_label=True) }}
+        {{ form_macro.form_field(form.carbs_target, with_label=True) }}
+    </form>
+
+{% endblock %}
