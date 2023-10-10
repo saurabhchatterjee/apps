@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}View Foods{% endblock %}
+
+{% block content %}
+
+    <div class="page-header">
+        <h3>View Foods</h3>
+    </div>
+
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+        <tr>
+            {% for col in columns %}
+                <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for  food in foods %}
+            <tr>
+                <td>{{ food.f_id }}</td>
+                <td>{{ food.f_name }}</td>
+                <td>{{ food.f_description }}</td>
+                <td>{{ food.f_qty }}</td>
+                <td>{{ food.f_unit }}</td>
+                <td>{{ food.f_calories }}</td>
+                <td>{{ food.f_fat }}</td>
+                <td>{{ food.f_protein }}</td>
+                <td>{{ food.f_carbs }}</td>
+                <td>{{ food.f_sugar }}</td>
+                <td>{{ food.f_added_sugar }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
